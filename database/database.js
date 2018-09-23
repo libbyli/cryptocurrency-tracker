@@ -1,33 +1,35 @@
 const db = require('./firebase');
 
-function writeUserData(userId, username, email) {
+function writeUserData(userId, username, email, callback) {
   db.ref(`users/${userId}`).set({
     username,
     email,
   })
-    .then(() => console.log('User data successfully written'))
-    .catch(error => console.log('Error in writing user data: ', error));
+    .then(results => callback(null, results))
+    .catch(error => callback(error, null));
 }
 
-function deleteUserData(userId) {
+function deleteUserData(userId, callback) {
   db.ref(`users/${userId}`).remove()
-    .then(() => console.log('User data successfully removed'))
-    .catch(error => console.log('Error in removing user data: ', error));
+    .then(results => callback(null, results))
+    .catch(error => callback(error, null));
 }
 
-function readUserData(userId) {
+function readUserData(userId, callback) {
   db.ref(`users/${userId}`).once('value')
-    .then(snapshot => console.log(snapshot.val()))
-    .catch(error => console.log('Error in reading user data: ', error));
+    .then(results => callback(null, results.val()))
+    .catch(error => callback(error, null));
 }
 
-function updateUserCurrency(userId, newCurrency) {
+function updateUserCurrency(userId, newCurrency, callback) {
   db.ref(`users/${userId}/currency`).push().set(newCurrency)
-    .then(() => console.log('User currency successfully updated'))
-    .catch(error => console.log('Error in updating user currency: ', error));
+    .then(results => callback(null, results))
+    .catch(error => callback(error, null));
 }
 
-// writeUserData(1, 'libby', 'sincerelylibby@gmail.com');
-// deleteUserData(1);
-// readUserData(1);
-// updateUserCurrency(1, 'test1');
+module.exports = {
+  writeUserData,
+  deleteUserData,
+  readUserData,
+  updateUserCurrency,
+};
