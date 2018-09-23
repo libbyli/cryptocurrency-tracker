@@ -2,7 +2,8 @@ import React from 'react';
 
 const CurrencyListEntry = ({ entry }) => (
   <tr>
-    <td>{entry.key}</td>
+    <td>{entry.name}</td>
+    <td>{entry.price}</td>
   </tr>
 );
 

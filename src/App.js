@@ -16,18 +16,32 @@ class App extends Component {
   }
 
   componentDidMount() {
-    axios.get(`/${this.state.userId}`)
+    axios.get(`/users/${this.state.userId}`)
       .then((response) => {
         console.log(response.data);
         if (response.data.currency) {
-          let additionalCurrency = Object.keys(response.data);
+          let additionalCurrency = Object.values(response.data.currency).join(',');
           this.setState({
-            currencyToSearch: additionalCurrency,
-          })
+            currencyToSearch: `,${additionalCurrency}`,
+          }) 
         }
-        axios.get(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH&tsyms=USD`)
+
+        axios.get(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH${this.state.currencyToSearch}&tsyms=USD`)
           .then((response) => {
             console.log(response.data);
+            let currencies = Object.keys(response.data);
+            console.log(currencies)
+            let currencyArray = [];
+            currencies.forEach((currency) => {
+              let currencyObj = {};
+              currencyObj.name = currency;
+              currencyObj.price = response.data[currency].USD;
+              currencyArray.push(currencyObj);
+            });
+            console.log(currencyArray)
+            this.setState({
+              currency: currencyArray,
+            });
           })
           .catch(error => console.log('Error in retrieving API data: ', error));
       })
@@ -39,7 +53,7 @@ class App extends Component {
       <section className="section">
         <div className="container">
           <h1 className="title">Cryptotracker</h1>
-          <CurrencyList currency={this.state.currency}/>
+          <CurrencyList currency={this.state.currency} />
         </div>
       </section>
     );

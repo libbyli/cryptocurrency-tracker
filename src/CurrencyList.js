@@ -12,7 +12,7 @@ const CurrencyList = ({ currency }) => (
       </thead>
       <tbody>
         {currency.map(entry =>
-        <CurrencyListEntry entry={entry} key={entry} />
+        <CurrencyListEntry entry={entry} key={entry.name} />
         )}
       </tbody>
     </table>
