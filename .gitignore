@@ -10,7 +10,7 @@
 /build
 
 # database config
-/server/firebase.js
+/database/firebase.js
 
 # misc
 .DS_Store
