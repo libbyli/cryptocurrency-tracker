@@ -10,7 +10,8 @@ class App extends Component {
     super(props);
     this.state = {
       userId: 1,
-      currency: ['BTC', 'ETH'],
+      currencyToSearch: '',
+      currency: [],
     };
   }
 
@@ -18,13 +19,19 @@ class App extends Component {
     axios.get(`/${this.state.userId}`)
       .then((response) => {
         console.log(response.data);
+        if (response.data.currency) {
+          let additionalCurrency = Object.keys(response.data);
+          this.setState({
+            currencyToSearch: additionalCurrency,
+          })
+        }
+        axios.get(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH&tsyms=USD`)
+          .then((response) => {
+            console.log(response.data);
+          })
+          .catch(error => console.log('Error in retrieving API data: ', error));
       })
       .catch(error => console.log('Error in retreiving user data upon loading: ', error));
-    // axios.get('https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH&tsyms=USD')
-    //   .then((response) => {
-    //     console.log(response.data);
-    //   })
-    //   .catch(error => console.log('Error in retrieving API data: ', error));
   }
 
   render() {

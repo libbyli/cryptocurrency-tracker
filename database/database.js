@@ -21,8 +21,8 @@ function readUserData(userId, callback) {
     .catch(error => callback(error, null));
 }
 
-function updateUserCurrency(userId, newCurrency, callback) {
-  db.ref(`users/${userId}/currency`).push().set(newCurrency)
+function addUserCurrency(userId, newCurrency, callback) {
+  db.ref(`users/${userId}/currency`).update({ newCurrency })
     .then(results => callback(null, results))
     .catch(error => callback(error, null));
 }
@@ -31,5 +31,5 @@ module.exports = {
   writeUserData,
   deleteUserData,
   readUserData,
-  updateUserCurrency,
+  addUserCurrency,
 };
