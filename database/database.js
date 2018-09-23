@@ -16,4 +16,12 @@ function deleteUserData(userId) {
     .catch(error => console.log('Error in removing user data: ', error));
 }
 
-writeUserData(1, 'libby', 'sincerelylibby@gmail.com');
+function readUserData(userId) {
+  db.ref(`users/${userId}`).once('value')
+    .then(snapshot => console.log(snapshot.val()))
+    .catch(error => console.log('Error in reading user data: ', error));
+}
+
+// writeUserData(1, 'libby', 'sincerelylibby@gmail.com');
+// deleteUserData(1);
+// readUserData(1);
