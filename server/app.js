@@ -18,7 +18,7 @@ app.get('/users/:userId', (req, res) => {
 });
 
 app.post('/users', (req, res) => {
-  db.writeUserData(req.body.userId, req.body.username, req.body.email, (error, results) => {
+  db.writeUserData(req.body.userId, req.body.username, req.body.email, (error) => {
     if (error) {
       res.status(500).send('Error in creating user');
     } else {
@@ -27,12 +27,32 @@ app.post('/users', (req, res) => {
   });
 });
 
+app.put('/users/:userId/currency', (req, res) => {
+  db.addUserCurrency(req.params.userId, req.body.currency, (error) => {
+    if (error) {
+      res.status(500).send('Error in adding currency');
+    } else {
+      res.status(200).send('Currency successfully added');
+    }
+  });
+});
+
+app.delete('/users/:userId/currency/:currency', (req, res) => {
+  db.deleteUserCurrency(req.params.userId, req.params.currency, (error) => {
+    if (error) {
+      res.status(500).send('Error in removing currency');
+    } else {
+      res.status(200).send('Currency removed');
+    }
+  });
+});
+
 app.delete('/users/:userId', (req, res) => {
-  db.deleteUserData(req.params.userId, (error, results) => {
+  db.deleteUserData(req.params.userId, (error) => {
     if (error) {
       res.status(500).send('Error in deleting user');
     } else {
-      res.status(202).send('User deleted');
+      res.status(200).send('User deleted');
     }
   });
 });
