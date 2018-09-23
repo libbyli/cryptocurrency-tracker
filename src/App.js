@@ -17,6 +17,32 @@ class App extends Component {
     };
   }
 
+  handleSubmit = (item) => {
+    if (this.state.allCurrency.includes(item)) {
+      axios.put(`/users/${this.state.userId}/currency`, {
+        currency: item
+      })
+      .then(() => {
+        axios.get(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${item}&tsyms=USD`)
+          .then((response) => {
+            const currencyToAdd = Object.keys(response.data);
+            console.log(currencyToAdd)
+            const currencyObj = {
+              name: currencyToAdd,
+              price: response.data[currencyToAdd].USD,
+            }
+            let newCurrencyArray = this.state.currency;
+            newCurrencyArray.push(currencyObj);
+            this.setState({
+              currency: newCurrencyArray,
+            });
+          })
+          .catch(error => console.log(error));
+      })
+      .catch(error => console.log(error));
+    }
+  }
+
   componentDidMount() {
     axios.get(`/users/${this.state.userId}`)
       .then((response) => {
@@ -47,7 +73,7 @@ class App extends Component {
 
     axios.get('https://min-api.cryptocompare.com/data/all/coinlist')
       .then((response) => {
-        let coinSymbols = Object.keys(response.data.Data);
+        const coinSymbols = Object.keys(response.data.Data);
         this.setState({
           allCurrency: coinSymbols,
         });
@@ -64,7 +90,7 @@ class App extends Component {
           </div>
         </section>
         <section className="section">
-          <CurrencySearch allCurrency={this.state.allCurrency} />
+          <CurrencySearch handleSubmit={this.handleSubmit} />
         </section>
         <section className="section">
           <CurrencyList currency={this.state.currency} />

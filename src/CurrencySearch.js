@@ -6,21 +6,13 @@ class CurrencySearch extends Component {
     this.state = {
       toSearch: '',
     };
-
-    this.handleChange = this.handleChange.bind(this);
   }
 
   handleChange = (event) => {
     this.setState({
-      toSearch: event.target.value,
+      toSearch: event.target.value.toUpperCase(),
     });
     console.log('searching :', this.state.toSearch)
-  }
-
-  handleSubmit = () => {
-    if (this.props.allCurrency.includes(this.state.toSearch)) {
-      console.log(this.state.toSearch)
-    }
   }
 
   render() {
@@ -33,7 +25,7 @@ class CurrencySearch extends Component {
         />
         <button
           className="button"
-          onClick={this.handleSubmit}
+          onClick={() => this.props.handleSubmit(this.state.toSearch)}
           type="submit"
         >
           Add to List
