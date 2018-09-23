@@ -11,12 +11,10 @@ const CurrencyList = ({ currency }) => (
         </tr>
       </thead>
       <tbody>
-        {currency.map(entry =>
-        <CurrencyListEntry entry={entry} key={entry.name} />
-        )}
+        {currency.map(entry => <CurrencyListEntry entry={entry} key={entry.name} />)}
       </tbody>
     </table>
   </div>
-)
+);
 
 export default CurrencyList;
