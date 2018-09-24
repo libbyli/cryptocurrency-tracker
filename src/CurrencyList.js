@@ -1,13 +1,13 @@
 import React from 'react';
 import CurrencyListEntry from './CurrencyListEntry';
 
-const CurrencyList = ({ currency, handleDelete }) => (
+const CurrencyList = ({ currency, handleDelete, newDisplay }) => (
   <div className="container">
     <table className="table">
       <thead>
         <tr>
           <th>Currency</th>
-          <th>Current Price (in USD)</th>
+          <th>Current Price (in {newDisplay})</th>
         </tr>
       </thead>
       <tbody>

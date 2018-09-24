@@ -14,20 +14,21 @@ class App extends Component {
       currencyToSearch: '',
       currency: [],
       notFound: false,
+      priceDisplayCurrency: 'USD',
+      newDisplay: 'USD',
       userId: 1,
     };
   }
 
-  handleSubmit = (item) => {
+  handleCurrencySearch = (item) => {
     if (this.state.allCurrency.includes(item)) {
       axios.put(`/users/${this.state.userId}/currency`, {
         currency: item
       })
       .then(() => {
-        axios.get(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${item}&tsyms=USD`)
+        axios.get(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${item}&tsyms=${this.state.priceDisplayCurrency}`)
           .then((response) => {
             const currencyToAdd = Object.keys(response.data);
-            console.log(currencyToAdd)
             const currencyObj = {
               name: currencyToAdd,
               price: response.data[currencyToAdd].USD,
@@ -60,6 +61,19 @@ class App extends Component {
       .catch(error => console.log(error));
   }
 
+  handlePriceDisplayChange = (event) => {
+    this.setState({
+      priceDisplayCurrency: event.target.value.toUpperCase(),
+    })
+  }
+
+  handlePriceDisplaySubmit = (currency) => {
+    this.setState({
+      newDisplay: currency,
+    })
+    this.refreshData();
+  }
+
   refreshData = () => {
     axios.get(`/users/${this.state.userId}`)
       .then((response) => {
@@ -70,14 +84,14 @@ class App extends Component {
           });
         }
 
-        axios.get(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH${this.state.currencyToSearch}&tsyms=USD`)
+        axios.get(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH${this.state.currencyToSearch}&tsyms=${this.state.priceDisplayCurrency}`)
           .then((response) => {
             const currencies = Object.keys(response.data);
             const currencyArray = [];
             currencies.forEach((currency) => {
               const currencyObj = {};
               currencyObj.name = currency;
-              currencyObj.price = response.data[currency].USD;
+              currencyObj.price = response.data[currency][this.state.priceDisplayCurrency];
               currencyArray.push(currencyObj);
             });
             this.setState({
@@ -114,7 +128,26 @@ class App extends Component {
             <p>Add a cryptocurrency to track by typing in its symbol below.</p>
             <p>{this.state.notFound ? 'Sorry, no currency by that symbol was found.' : null }</p>
           </div>
-          <CurrencySearch handleSubmit={this.handleSubmit} />
+          <CurrencySearch
+            handleCurrencySearch={this.handleCurrencySearch} />
+          <br />
+          <div className="content">
+            <p>Display the current price in:
+              <input
+                className="input price"
+                onChange={event => this.handlePriceDisplayChange(event)}
+                placeholder="currency name (e.g. EUR)"
+                type="text"
+              />
+              <button
+                className="button"
+                onClick={() => this.handlePriceDisplaySubmit(this.state.priceDisplayCurrency)}
+                type="submit"
+              >
+              Update
+              </button>
+            </p>
+          </div>
         </section>
         <section className="section">
           <button
@@ -124,7 +157,11 @@ class App extends Component {
           >
             Refresh Data
           </button>
-          <CurrencyList currency={this.state.currency} handleDelete={this.handleDelete} />
+          <CurrencyList
+            currency={this.state.currency}
+            handleDelete={this.handleDelete}
+            newDisplay={this.state.newDisplay}
+          />
         </section>
       </section>
     );

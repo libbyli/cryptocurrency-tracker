@@ -1,7 +1,13 @@
 .input {
   max-width: 100%;
   margin-right: 5px;
-  width: 300px;
+  width: 400px;
+}
+
+.input.price {
+  max-width: 100%;
+  margin-left: 5px;
+  width: 220px;
 }
 
 .section {

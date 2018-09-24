@@ -6,7 +6,7 @@ const CurrencyListEntry = ({ entry, handleDelete }) => (
     <td>
       <div className="columns">
         <div className="column">
-          ${entry.price}
+          {entry.price}
         </div>
         <div className="column" align="right">
           {entry.name === 'BTC' || entry.name === 'ETH'

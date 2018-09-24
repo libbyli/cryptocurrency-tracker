@@ -8,7 +8,7 @@ class CurrencySearch extends Component {
     };
   }
 
-  handleChange = (event) => {
+  handleCurrencyChange = (event) => {
     this.setState({
       toSearch: event.target.value.toUpperCase(),
     });
@@ -19,12 +19,12 @@ class CurrencySearch extends Component {
       <div className="container">
         <input
           className="input"
-          onChange={event => this.handleChange(event)}
+          onChange={event => this.handleCurrencyChange(event)}
           type="text"
         />
         <button
           className="button"
-          onClick={() => this.props.handleSubmit(this.state.toSearch)}
+          onClick={() => this.props.handleCurrencySearch(this.state.toSearch)}
           type="submit"
         >
           Add to List
