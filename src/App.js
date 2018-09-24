@@ -43,6 +43,17 @@ class App extends Component {
     }
   }
 
+  handleDelete = (item) => {
+    axios.delete(`/users/${this.state.userId}/currency/${item}`)
+      .then(() => {
+        let newCurrencyList = this.state.currency.filter(currency => currency.name !== item);
+        this.setState({
+          currency: newCurrencyList,
+        });
+      })
+      .catch(error => console.log(error));
+  }
+
   componentDidMount() {
     axios.get(`/users/${this.state.userId}`)
       .then((response) => {
@@ -93,7 +104,7 @@ class App extends Component {
           <CurrencySearch handleSubmit={this.handleSubmit} />
         </section>
         <section className="section">
-          <CurrencyList currency={this.state.currency} />
+          <CurrencyList currency={this.state.currency} handleDelete={this.handleDelete} />
         </section>
       </section>
     );

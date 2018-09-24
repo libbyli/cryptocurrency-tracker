@@ -1,7 +1,7 @@
 import React from 'react';
 import CurrencyListEntry from './CurrencyListEntry';
 
-const CurrencyList = ({ currency }) => (
+const CurrencyList = ({ currency, handleDelete }) => (
   <div className="container">
     <table className="table">
       <thead>
@@ -11,7 +11,13 @@ const CurrencyList = ({ currency }) => (
         </tr>
       </thead>
       <tbody>
-        {currency.map(entry => <CurrencyListEntry entry={entry} key={entry.name} />)}
+        {currency.map(entry =>
+          <CurrencyListEntry
+            entry={entry}
+            handleDelete={handleDelete}
+            key={entry.name}
+          />
+        )}
       </tbody>
     </table>
   </div>

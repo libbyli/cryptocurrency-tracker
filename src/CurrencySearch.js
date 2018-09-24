@@ -12,7 +12,6 @@ class CurrencySearch extends Component {
     this.setState({
       toSearch: event.target.value.toUpperCase(),
     });
-    console.log('searching :', this.state.toSearch)
   }
 
   render() {
