@@ -13,6 +13,7 @@ class App extends Component {
       allCurrency: [],
       currencyToSearch: '',
       currency: [],
+      notFound: false,
       userId: 1,
     };
   }
@@ -35,11 +36,16 @@ class App extends Component {
             newCurrencyArray.push(currencyObj);
             this.setState({
               currency: newCurrencyArray,
+              notFound: false,
             });
           })
           .catch(error => console.log(error));
       })
       .catch(error => console.log(error));
+    } else {
+      this.setState({
+        notFound: true,
+      });
     }
   }
 
@@ -54,7 +60,7 @@ class App extends Component {
       .catch(error => console.log(error));
   }
 
-  componentDidMount() {
+  refreshData = () => {
     axios.get(`/users/${this.state.userId}`)
       .then((response) => {
         if (response.data.currency) {
@@ -81,7 +87,10 @@ class App extends Component {
           .catch(error => console.log('Error in retrieving API data: ', error));
       })
       .catch(error => console.log('Error in retreiving user data upon loading: ', error));
+  }
 
+  componentDidMount() {
+    this.refreshData();
     axios.get('https://min-api.cryptocompare.com/data/all/coinlist')
       .then((response) => {
         const coinSymbols = Object.keys(response.data.Data);
@@ -101,9 +110,20 @@ class App extends Component {
           </div>
         </section>
         <section className="section">
+          <div className="content">
+            <p>Add a cryptocurrency to track by typing in its symbol below.</p>
+            <p>{this.state.notFound ? 'Sorry, no currency by that symbol was found.' : null }</p>
+          </div>
           <CurrencySearch handleSubmit={this.handleSubmit} />
         </section>
         <section className="section">
+          <button
+            className="button"
+            onClick={this.refreshData}
+            type="submit"
+          >
+            Refresh Data
+          </button>
           <CurrencyList currency={this.state.currency} handleDelete={this.handleDelete} />
         </section>
       </section>

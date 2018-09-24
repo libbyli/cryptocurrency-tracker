@@ -30,14 +30,9 @@ function addUserCurrency(userId, newCurrency, callback) {
 function deleteUserCurrency(userId, currencyToDelete, callback) {
   db.ref(`users/${userId}/currency`).orderByValue().equalTo(currencyToDelete).once('value')
     .then((snapshot) => {
-      let toDelete = Object.keys(snapshot.val());
-      console.log(toDelete);
-
-      toDelete.forEach(key =>
-        db.ref(`users/${userId}/currency/${key}`).remove()
-          .catch(error => callback(error, null))
-      );
-
+      const toDelete = Object.keys(snapshot.val());
+      toDelete.forEach(key => db.ref(`users/${userId}/currency/${key}`).remove()
+        .catch(error => callback(error, null)));
       callback(null, 'success');
     })
     .catch(error => callback(error, null));
