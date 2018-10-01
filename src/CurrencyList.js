@@ -1,12 +1,12 @@
 import React from 'react';
 import CurrencyListEntry from './CurrencyListEntry';
 
-const CurrencyList = ({ currency, handleDelete, newDisplay }) => (
+const CurrencyList = ({ currency, handleDelete, newDisplay, sortCurrency }) => (
   <div className="container">
     <table className="table">
       <thead>
         <tr>
-          <th>Currency</th>
+          <th onClick={sortCurrency}>Currency</th>
           <th>Current Price (in {newDisplay})</th>
         </tr>
       </thead>
@@ -16,6 +16,7 @@ const CurrencyList = ({ currency, handleDelete, newDisplay }) => (
             entry={entry}
             handleDelete={handleDelete}
             key={entry.name}
+            newDisplay={newDisplay}
           />
         )}
       </tbody>

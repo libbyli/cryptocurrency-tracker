@@ -11,11 +11,13 @@ class App extends Component {
     super(props);
     this.state = {
       allCurrency: [],
+      allPrices: 'USD,JPY,EUR',
       currencyToSearch: '',
       currency: [],
       notFound: false,
       priceDisplayCurrency: 'USD',
-      newDisplay: 'USD',
+      newDisplay: 'price',
+      sortedAscending: false,
       userId: 1,
     };
   }
@@ -48,6 +50,44 @@ class App extends Component {
         notFound: true,
       });
     }
+  }
+
+  sortCurrency = (array) => {
+    if (this.state.sortedAscending) {
+      let sortedDescending = this.state.currency.sort((a, b) => {
+        if (b.name < a.name) {
+          return -1;
+        }
+        if (b.name > a.name) {
+          return 1;
+        }
+        return 0;
+      });
+      this.setState({
+        currency: sortedDescending,
+        sortedAscending: false,
+      });
+    } else {
+      let sortedCurrency = this.state.currency.sort((a, b) => {
+        if (a.name < b.name) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      });
+      this.setState({
+        currency: sortedCurrency,
+        sortedAscending: true,
+      });
+    }
+  }
+
+  changePriceDisplay = (name) => {
+    this.setState({
+      newDisplay: name,
+    })
   }
 
   handleDelete = (item) => {
@@ -84,7 +124,7 @@ class App extends Component {
           });
         }
 
-        axios.get(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH${this.state.currencyToSearch}&tsyms=${this.state.priceDisplayCurrency}`)
+        axios.get(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH${this.state.currencyToSearch}&tsyms=${this.state.allPrices}`)
           .then((response) => {
             const currencies = Object.keys(response.data);
             const currencyArray = [];
@@ -92,6 +132,8 @@ class App extends Component {
               const currencyObj = {};
               currencyObj.name = currency;
               currencyObj.price = response.data[currency][this.state.priceDisplayCurrency];
+              currencyObj.priceJPY = response.data[currency]['JPY'];
+              currencyObj.priceEUR = response.data[currency]['EUR'];
               currencyArray.push(currencyObj);
             });
             this.setState({
@@ -129,6 +171,7 @@ class App extends Component {
             <p>{this.state.notFound ? 'Sorry, no currency by that symbol was found.' : null }</p>
           </div>
           <CurrencySearch
+            allCurrency={this.state.allCurrency}
             handleCurrencySearch={this.handleCurrencySearch} />
           <br />
           <div className="content">
@@ -157,10 +200,32 @@ class App extends Component {
           >
             Refresh Data
           </button>
+          <button
+            className="button"
+            onClick={() => this.changePriceDisplay('price')}
+            type="submit"
+          >
+            Display in USD
+          </button>
+          <button
+            className="button"
+            onClick={() => this.changePriceDisplay('priceJPY')}
+            type="submit"
+          >
+            Display in JPY
+          </button>
+          <button
+            className="button"
+            onClick={() => this.changePriceDisplay('priceEUR')}
+            type="submit"
+          >
+            Display in EUR
+          </button>
           <CurrencyList
             currency={this.state.currency}
             handleDelete={this.handleDelete}
             newDisplay={this.state.newDisplay}
+            sortCurrency={this.sortCurrency}
           />
         </section>
       </section>

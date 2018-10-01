@@ -13,3 +13,8 @@
 .section {
   padding: 1.5rem 0.75rem;
 }
+
+.search {
+  max-height: 300px;
+  overflow: scroll;
+}
